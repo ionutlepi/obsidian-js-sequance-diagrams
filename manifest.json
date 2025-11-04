@@ -1,0 +1,10 @@
+{
+  "id": "sqjs-sequence-diagrams",
+  "name": "JS Sequence Diagram Renderer",
+  "version": "0.9.0",
+  "minAppVersion": "1.0.0",
+  "description": "Render sequence diagrams using js-sequence-diagrams syntax with sqjs code blocks",
+  "author": "Ionut Lepadatescu",
+  "authorUrl": "https://github.com/ionutlepi",
+  "isDesktopOnly": true
+}

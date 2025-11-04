@@ -1,0 +1,39 @@
+{
+  "name": "obsidian-sqjs-sequence-diagrams",
+  "version": "0.9.0",
+  "description": "Render sequence diagrams from sqjs code blocks using js-sequence-diagrams",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "node esbuild.config.mjs production",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest --coverage",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "obsidian",
+    "obsidian-plugin",
+    "sequence-diagrams"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@testing-library/dom": "^10.0.0",
+    "@types/node": "^20.0.0",
+    "@vitest/coverage-v8": "^1.6.1",
+    "esbuild": "^0.19.0",
+    "happy-dom": "^12.0.0",
+    "obsidian": "latest",
+    "typescript": "^5.3.0",
+    "vitest": "^1.0.0"
+  },
+  "dependencies": {
+    "js-sequence-diagram": "^2.0.1",
+    "lodash": "^4.17.21",
+    "raphael": "^2.3.0",
+    "snapsvg": "^0.5.1",
+    "underscore": "^1.13.7",
+    "webfontloader": "^1.6.28"
+  }
+}

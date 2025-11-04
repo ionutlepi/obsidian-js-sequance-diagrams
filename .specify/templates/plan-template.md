@@ -31,7 +31,14 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+**Verification Checklist** (from constitution v1.0.0):
+
+- [ ] **Plugin-First Architecture**: Feature designed as independent plugin module with clear boundaries
+- [ ] **Test-First Development**: Test tasks precede implementation tasks in tasks.md
+- [ ] **Specification-Driven**: Complete spec.md exists with approved user stories and requirements
+- [ ] **Complexity Justification**: Any violations documented with rationale below
+
+If any checks fail, implementation is blocked until violations are resolved or justified in the Complexity Tracking section below.
 
 ## Project Structure
 
