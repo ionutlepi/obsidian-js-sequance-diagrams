@@ -1,8 +1,24 @@
-# Lessons Learned - SQJS Sequence Diagram Renderer
+# Lessons Learned
 
 **Project**: Obsidian SQJS Sequence Diagram Plugin
-**Version**: 0.9.0
-**Date**: November 2, 2025
+**Constitution**: Principle IV - Knowledge Retention & Lessons Learned (v1.1.0)
+**Last Updated**: November 7, 2025
+
+---
+
+## Purpose
+
+This document captures critical insights, problems solved, and mistakes made during development to prevent recurring issues and accelerate future work. Per Constitution Principle IV, all significant lessons must be recorded here with context, problem, solution, impact, and date.
+
+**Usage**:
+- Review this document at the start of each new feature planning phase
+- Consult when encountering similar problems
+- Update existing lessons rather than creating duplicates
+- Lessons are categorized by topic for easy reference
+
+---
+
+## Version 0.9.0 - SQJS Sequence Diagram Renderer (November 2, 2025)
 
 ---
 

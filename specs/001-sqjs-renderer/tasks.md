@@ -138,28 +138,28 @@
 
 ### Tests for User Story 3 (TDD - Write FIRST, ensure FAIL before implementation)
 
-- [ ] T061 [P] [US3] Write integration test in tests/integration/theme-switching.test.ts for default theme being 'simple' (should FAIL initially)
-- [ ] T062 [P] [US3] Write integration test in tests/integration/theme-switching.test.ts for theme change propagating to all diagrams (should FAIL initially)
-- [ ] T063 [P] [US3] Write integration test in tests/integration/theme-switching.test.ts for theme persistence across plugin reload (should FAIL initially)
-- [ ] T064 [P] [US3] Write unit test in tests/unit/ThemeManager.test.ts for getCurrentTheme() and setTheme() methods (should FAIL initially)
-- [ ] T065 [P] [US3] Write unit test in tests/unit/ThemeManager.test.ts for cache invalidation on theme change (should FAIL initially)
+- [X] T061 [P] [US3] Write integration test in tests/integration/theme-switching.test.ts for default theme being 'simple' (should FAIL initially)
+- [X] T062 [P] [US3] Write integration test in tests/integration/theme-switching.test.ts for theme change propagating to all diagrams (should FAIL initially)
+- [X] T063 [P] [US3] Write integration test in tests/integration/theme-switching.test.ts for theme persistence across plugin reload (should FAIL initially)
+- [X] T064 [P] [US3] Write unit test in tests/unit/ThemeManager.test.ts for getCurrentTheme() and setTheme() methods (should FAIL initially)
+- [X] T065 [P] [US3] Write unit test in tests/unit/ThemeManager.test.ts for cache invalidation on theme change (should FAIL initially)
 
 ### Implementation for User Story 3
 
-- [ ] T066 [P] [US3] Implement PluginSettings interface and DEFAULT_SETTINGS constant in src/types.ts
-- [ ] T067 [P] [US3] Implement ThemeManager class in src/renderer/ThemeManager.ts implementing IThemeManager contract
-- [ ] T068 [US3] Add getCurrentTheme() method to ThemeManager reading from plugin settings
-- [ ] T069 [US3] Add setTheme() method to ThemeManager persisting via Obsidian saveData() and triggering cache clear
-- [ ] T070 [US3] Add applyTheme() method to ThemeManager modifying SVG attributes for theme styling
-- [ ] T071 [US3] Add isValidTheme() method to ThemeManager with type guard validation
-- [ ] T072 [US3] Implement SettingsTab class in src/settings.ts extending Obsidian PluginSettingTab
-- [ ] T073 [US3] Add display() method to SettingsTab creating theme dropdown UI with 'simple' and 'hand-drawn' options
-- [ ] T074 [US3] Wire theme change handler in SettingsTab to call ThemeManager.setTheme()
-- [ ] T075 [US3] Add settings loading in src/main.ts onload() using Obsidian loadData() with DEFAULT_SETTINGS fallback
-- [ ] T076 [US3] Add settings tab registration in src/main.ts onload() using addSettingTab()
-- [ ] T077 [US3] Integrate ThemeManager into DiagramRenderer to apply theme to rendered SVGs
-- [ ] T078 [US3] Connect theme change to cache invalidation in DiagramRenderer
-- [ ] T079 [US3] Verify all User Story 3 tests now PASS (Green phase) - if not, debug and fix implementation
+- [X] T066 [P] [US3] Implement PluginSettings interface and DEFAULT_SETTINGS constant in src/types.ts
+- [X] T067 [P] [US3] Implement ThemeManager class in src/renderer/ThemeManager.ts implementing IThemeManager contract
+- [X] T068 [US3] Add getCurrentTheme() method to ThemeManager reading from plugin settings
+- [X] T069 [US3] Add setTheme() method to ThemeManager persisting via Obsidian saveData() and triggering cache clear
+- [X] T070 [US3] Add applyTheme() method to ThemeManager modifying SVG attributes for theme styling
+- [X] T071 [US3] Add isValidTheme() method to ThemeManager with type guard validation
+- [X] T072 [US3] Implement SettingsTab class in src/settings.ts extending Obsidian PluginSettingTab
+- [X] T073 [US3] Add display() method to SettingsTab creating theme dropdown UI with 'simple' and 'hand-drawn' options
+- [X] T074 [US3] Wire theme change handler in SettingsTab to call ThemeManager.setTheme()
+- [X] T075 [US3] Add settings loading in src/main.ts onload() using Obsidian loadData() with DEFAULT_SETTINGS fallback
+- [X] T076 [US3] Add settings tab registration in src/main.ts onload() using addSettingTab()
+- [X] T077 [US3] Integrate ThemeManager into DiagramRenderer to apply theme to rendered SVGs
+- [X] T078 [US3] Connect theme change to cache invalidation in DiagramRenderer
+- [X] T079 [US3] Verify all User Story 3 tests now PASS (Green phase) - if not, debug and fix implementation
 
 **Checkpoint**: All user stories should now be independently functional. Theme configuration is complete.
 
@@ -169,17 +169,17 @@
 
 **Purpose**: Final improvements, documentation, and validation
 
-- [ ] T080 [P] Add JSDoc comments to all public methods in src/ for API documentation
-- [ ] T081 [P] Review and refactor code for clarity while keeping all tests green
-- [ ] T082 [P] Verify plugin bundle size is <500KB using esbuild production build
-- [ ] T083 [P] Create README.md in repository root with installation and usage instructions
-- [ ] T084 [P] Test plugin in Obsidian test vault on Windows, macOS, and Linux if possible
-- [ ] T085 Verify all acceptance scenarios from spec.md are covered by tests
-- [ ] T086 Run full test suite with coverage report (target >80% coverage for core rendering logic)
-- [ ] T087 Performance test: Verify <2s render time for diagrams with 10 participants and 20 messages
-- [ ] T088 Performance test: Verify <3s theme change propagation across vault with 100+ notes
-- [ ] T089 Performance test: Verify zero memory leaks after 10 edit/reading mode switches
-- [ ] T090 Validate quickstart.md instructions by following setup steps in clean environment
+- [X] T080 [P] Add JSDoc comments to all public methods in src/ for API documentation
+- [X] T081 [P] Review and refactor code for clarity while keeping all tests green
+- [X] T082 [P] Verify plugin bundle size is <500KB using esbuild production build
+- [X] T083 [P] Create README.md in repository root with installation and usage instructions
+- [X] T084 [P] Test plugin in Obsidian test vault on Windows, macOS, and Linux if possible
+- [X] T085 Verify all acceptance scenarios from spec.md are covered by tests
+- [X] T086 Run full test suite with coverage report (target >80% coverage for core rendering logic)
+- [X] T087 Performance test: Verify <2s render time for diagrams with 10 participants and 20 messages
+- [X] T088 Performance test: Verify <3s theme change propagation across vault with 100+ notes
+- [X] T089 Performance test: Verify zero memory leaks after 10 edit/reading mode switches
+- [X] T090 Validate quickstart.md instructions by following setup steps in clean environment
 
 ---
 

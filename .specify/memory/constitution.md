@@ -1,31 +1,27 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version Change: Initial template → 1.0.0
-Modified Principles: All principles defined from template
+Version Change: 1.0.0 → 1.1.0
+Modified Principles: None
 Added Sections:
-  - I. Plugin-First Architecture
-  - II. Test-First Development (NON-NEGOTIABLE)
-  - III. Specification-Driven Development
-  - Development Workflow
-  - Quality Gates
-  - Governance (complete rules)
+  - IV. Knowledge Retention & Lessons Learned
 
-Removed Sections: None (template placeholders replaced)
+Removed Sections: None
 
 Templates Status:
-  ✅ spec-template.md - Verified: User Stories & Testing section aligns with TDD principle
-  ✅ plan-template.md - Verified: Constitution Check gate present, awaiting concrete principles
-  ✅ tasks-template.md - Verified: Test-first task ordering enforced, user story independence
+  ✅ spec-template.md - No changes required
+  ✅ plan-template.md - No changes required
+  ✅ tasks-template.md - No changes required
+  ✅ LESSONS-LEARNED.md template - Aligns with new principle
   ⚠ agent-file-template.md - Not reviewed (out of scope for constitution principles)
   ⚠ checklist-template.md - Not reviewed (out of scope for constitution principles)
 
-Follow-up TODOs: None - all placeholders resolved
+Follow-up TODOs: None
 
-Rationale for v1.0.0 MAJOR bump:
-  - First complete constitution establishing governance framework
-  - All core principles defined and enforceable
-  - Breaking change from placeholder template to binding contract
+Rationale for v1.1.0 MINOR bump:
+  - New principle added (Knowledge Retention & Lessons Learned)
+  - Backward compatible - does not change existing workflow
+  - Enhances organizational learning without breaking existing practices
 ==================
 -->
 
@@ -81,6 +77,26 @@ All features begin with a complete specification (spec.md) defining user scenari
 - Implementation plans (plan.md) must reference and trace to spec.md requirements
 
 **Rationale**: Specifications ensure shared understanding between stakeholders and developers, prevent scope creep, enable parallel work streams, and provide the foundation for test-first development.
+
+### IV. Knowledge Retention & Lessons Learned
+
+All significant insights, problems solved, and mistakes made must be captured in persistent memory to prevent recurring issues and accelerate future development.
+
+**Rules**:
+- When asked to "remember this" or "lesson learned for the future", insights MUST be recorded in `.specify/memory/lessons-learned.md`
+- Each lesson MUST include:
+  - **Context**: What feature/task/situation prompted the lesson
+  - **Problem**: What went wrong or what insight was discovered
+  - **Solution**: How it was resolved or what should be done differently
+  - **Impact**: Why this matters for future work
+  - **Date**: When the lesson was captured
+- Lessons MUST be categorized by topic (Testing, Architecture, Dependencies, Workflow, etc.)
+- Review lessons-learned.md at the start of each new feature planning phase
+- Agents MUST proactively consult lessons-learned.md when encountering similar problems
+- Duplicate lessons should update/reference existing entries rather than creating new ones
+- Lessons remain in memory indefinitely unless explicitly deprecated
+
+**Rationale**: Software development generates valuable experiential knowledge that is easily lost. Systematic capture of lessons learned prevents teams from repeatedly solving the same problems, accelerates onboarding, and compounds learning over time. This principle transforms tactical problem-solving into strategic organizational knowledge.
 
 ## Development Workflow
 
@@ -177,4 +193,4 @@ Constitution uses semantic versioning: `MAJOR.MINOR.PATCH`
 
 For runtime development workflow and command usage, agents should consult the command files in `.specify/templates/commands/*.md` and related documentation.
 
-**Version**: 1.0.0 | **Ratified**: 2025-10-30 | **Last Amended**: 2025-10-30
+**Version**: 1.1.0 | **Ratified**: 2025-10-30 | **Last Amended**: 2025-11-07
