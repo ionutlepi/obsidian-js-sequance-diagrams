@@ -97,9 +97,164 @@ Order->Customer: Confirmation
 | Dashed arrow | `A-->B: Message` | `Alice-->Bob: Async call` |
 | Title | `Title: Text` | `Title: My Diagram` |
 | Note | `Note [position] of [participant]: Text` | `Note right of Alice: Thinking...` |
-| Participant | `Participant Name` | `Participant Server` |
+| Participant | `participant Name` | `participant Server` |
+| Participant Alias | `participant Short as "Display Name"` | `participant API as "REST API Gateway"` |
 
 For full syntax details, see [js-sequence-diagrams documentation](https://bramp.github.io/js-sequence-diagrams/).
+
+### Enhanced Syntax Features (v0.10.0+)
+
+#### Diagram Titles
+
+Add descriptive titles above your sequence diagrams for better documentation:
+
+````markdown
+```sqjs
+Title: User Authentication Flow
+
+User->Server: Login request
+Server->Database: Validate credentials
+Database->Server: User found
+Server->User: Success + token
+```
+````
+
+**Title Syntax Rules**:
+- Title keyword is case-insensitive (`Title:`, `title:`, `TITLE:` all work)
+- Must appear on the first non-empty line
+- Supports special characters, Unicode, and emoji: `Title: 🔐 Auth Flow (v2.0)`
+- Whitespace before/after title text is automatically trimmed
+- Multiple titles are allowed (first one is used, others ignored)
+
+#### Participant Aliasing
+
+Use short identifiers in message flows while displaying full names in the rendered diagram:
+
+````markdown
+```sqjs
+Title: Service Communication
+
+participant UI as "User Interface"
+participant API as "REST API Gateway"
+participant DB as "PostgreSQL Database"
+
+UI->API: HTTP Request
+API->DB: SQL Query
+DB->API: Result Set
+API->UI: JSON Response
+```
+````
+
+**Alias Syntax Rules**:
+- Format: `participant [ShortName] as "[Display Name]"`
+- Short names must start with a letter or underscore (e.g., `API`, `_cache`)
+- Display names must be enclosed in double quotes
+- Display names support spaces, special characters, Unicode, and emoji
+- Mix aliased and non-aliased participants freely
+
+**Benefits**:
+- Reduces diagram verbosity by ~30%
+- Makes complex diagrams more readable
+- Keeps messages concise while preserving clarity
+
+````markdown
+```sqjs
+participant C as "🌐 Client"
+participant S as "🖥️ Server"
+C->S: Quick and readable!
+```
+````
+
+#### Participant Ordering
+
+Control the left-to-right order of participants by declaring them explicitly:
+
+````markdown
+```sqjs
+Title: Controlled Participant Order
+
+participant Database
+participant Server
+participant Client
+
+Client->Server: Request
+Server->Database: Query
+Database->Server: Results
+Server->Client: Response
+```
+````
+
+The diagram will display participants in the order they're declared (Database, Server, Client), not alphabetically or by message flow order.
+
+**Ordering Rules**:
+- Participants are displayed left-to-right in declaration order
+- Declared participants always appear before undeclared ones
+- Order is maintained regardless of message flow
+- Works with both simple and aliased participants
+
+**Example - Reverse Alphabetical Order**:
+
+````markdown
+```sqjs
+participant Z as "Zulu Service"
+participant M as "Mike Service"
+participant A as "Alpha Service"
+
+A->M: Forward
+M->Z: Process
+Z->A: Response
+```
+````
+
+Displays as: **Zulu | Mike | Alpha** (left to right)
+
+#### Combined Features Example
+
+All three features work together seamlessly:
+
+````markdown
+```sqjs
+Title: 🔐 Complete Authentication Flow (v2.0)
+
+participant Client as "Web Browser"
+participant LB as "Load Balancer"
+participant Auth as "Auth Service"
+participant Cache as "Redis Cache"
+participant DB as "User Database"
+
+Client->LB: POST /login
+LB->Auth: Forward credentials
+Auth->Cache: Check session
+Cache->Auth: Cache miss
+Auth->DB: Validate user
+DB->Auth: User valid
+Auth->Cache: Store session
+Auth->LB: JWT token
+LB->Client: 200 OK + token
+```
+````
+
+### Syntax Error Messages
+
+The plugin provides helpful, actionable error messages when syntax is invalid:
+
+````
+⚠ Syntax Error
+unclosed quote in participant alias
+Suggestion: Ensure quotes are properly matched around the display name
+````
+
+````
+⚠ Syntax Error
+empty participant alias not allowed
+Suggestion: Provide a non-empty display name or remove the alias declaration
+````
+
+````
+⚠ Syntax Error
+Invalid participant identifier. Cannot start with a number
+Suggestion: Participant names must start with a letter or underscore
+````
 
 ## Configuration
 

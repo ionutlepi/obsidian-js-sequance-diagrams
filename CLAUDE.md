@@ -3,6 +3,8 @@
 Auto-generated from all feature plans. Last updated: 2025-10-30
 
 ## Active Technologies
+- TypeScript 5.x (existing plugin infrastructure) (002-title-alias-support)
+- Plugin settings via Obsidian's data.json (no new storage requirements) (002-title-alias-support)
 
 - TypeScript 5.x (required for Obsidian plugin development) (001-sqjs-renderer)
 
@@ -22,6 +24,7 @@ npm test && npm run lint
 TypeScript 5.x (required for Obsidian plugin development): Follow standard conventions
 
 ## Recent Changes
+- 002-title-alias-support: Added TypeScript 5.x (existing plugin infrastructure)
 
 - 001-sqjs-renderer: Added TypeScript 5.x (required for Obsidian plugin development)
 

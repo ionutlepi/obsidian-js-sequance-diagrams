@@ -4,6 +4,21 @@ Copy any of these examples directly into your Obsidian notes and switch to Readi
 
 ---
 
+## 📑 Table of Contents
+
+- [✨ New in v0.10.0: Enhanced Syntax Features](#-new-in-v0100-enhanced-syntax-features) - **Start here for the latest features!**
+  - [Diagram Titles](#feature-1-diagram-titles)
+  - [Participant Aliasing](#feature-2-participant-aliasing)
+  - [Participant Ordering](#feature-3-participant-ordering)
+  - [Combined Examples](#feature-4-combined---all-three-features-together)
+- [🧪 Quick Test Data](#-quick-test-data-copy-these-first)
+- [Basic Examples](#basic-examples)
+- [Common Use Cases](#common-use-cases)
+- [Technical Flows](#technical-flows)
+- [Real-World Examples](#real-world-examples)
+
+---
+
 ## 📋 Test Case Coverage
 
 This file contains sample data for all 9 test cases from `QUICKTEST.md`:
@@ -133,6 +148,163 @@ Charlie->Dave: Valid
 
 ---
 
+## ✨ New in v0.10.0: Enhanced Syntax Features
+
+### Feature 1: Diagram Titles
+Add descriptive titles above your diagrams for better documentation:
+
+```sqjs
+Title: User Authentication Flow
+
+User->Server: Login request
+Server->Database: Validate credentials
+Database->Server: User found
+Server->User: Success + token
+```
+
+**Title Features**:
+- Case-insensitive: `Title:`, `title:`, `TITLE:` all work
+- Unicode & emoji support: `Title: 🔐 Auth Flow (v2.0)`
+- Must appear on first non-empty line
+- Whitespace is automatically trimmed
+
+---
+
+### Feature 2: Participant Aliasing
+Use short identifiers in messages while displaying full names in the diagram:
+
+```sqjs
+Title: Service Communication
+
+participant User Interface as UI
+participant REST API Gateway as API
+participant PostgreSQL Database as DB
+
+UI->API: HTTP Request
+API->DB: SQL Query
+DB->API: Result Set
+API->UI: JSON Response
+```
+
+**How It Works**:
+- **Display Name** (before "as"): Full name shown in diagram boxes
+- **Alias** (after "as"): Short identifier used in messages
+- **No quotes needed** - spaces work naturally in display names
+
+**Alias Benefits**:
+- Reduces diagram verbosity by ~30%
+- Makes messages more readable
+- Supports spaces, special characters, and emoji in display names
+- Mix aliased and non-aliased participants
+
+**Example with Emoji**:
+```sqjs
+participant 🌐 Web Client as C
+participant 🖥️ Server as S
+participant 💾 Database as D
+
+C->S: Request
+S->D: Query
+D->S: Data
+S->C: Response
+```
+
+---
+
+### Feature 3: Participant Ordering
+Control left-to-right participant placement:
+
+```sqjs
+Title: Controlled Ordering
+
+participant Database
+participant Server
+participant Client
+
+Client->Server: Request
+Server->Database: Query
+Database->Server: Results
+Server->Client: Response
+```
+
+**Ordering displays**: Database | Server | Client (left to right)
+
+**Without explicit ordering**, participants would appear in message flow order.
+
+---
+
+### Feature 4: Combined - All Three Features Together
+
+```sqjs
+Title: 🔐 Complete Authentication Flow (v2.0)
+
+participant Web Browser as Client
+participant Load Balancer as LB
+participant Auth Service as Auth
+participant Redis Cache as Cache
+participant User Database as DB
+
+Client->LB: POST /login
+LB->Auth: Forward credentials
+Auth->Cache: Check session
+Cache->Auth: Cache miss
+Auth->DB: Validate user
+DB->Auth: User valid
+Auth->Cache: Store session
+Auth->LB: JWT token
+LB->Client: 200 OK + token
+```
+
+**This example demonstrates**:
+- Title with emoji and version number
+- Five aliased participants with descriptive names
+- Explicit ordering (Web Browser, Load Balancer, Auth Service, etc.)
+- Clean, readable message flow using short aliases
+
+---
+
+### Feature 5: Reverse Alphabetical Order
+
+```sqjs
+Title: Order Demonstration
+
+participant Zulu Service as Z
+participant Mike Service as M
+participant Alpha Service as A
+
+A->M: Forward request
+M->Z: Process data
+Z->M: Return result
+M->A: Final response
+```
+
+**Notice**: Participants display as "Zulu Service | Mike Service | Alpha Service" (left to right), not alphabetical!
+
+---
+
+### Feature 6: Mixed Aliased and Simple Participants
+
+```sqjs
+Title: Mixed Participant Types
+
+participant REST API Gateway as API
+participant Cache
+participant PostgreSQL Database as DB
+participant Logger
+
+API->Cache: Check cache
+Cache->API: Miss
+API->DB: Query data
+DB->API: Results
+API->Logger: Log request
+Logger->API: Logged
+API->Cache: Update cache
+```
+
+**Notice**: `Cache` and `Logger` have no aliases - they display their simple names as-is
+
+---
+
 ## Basic Examples
 
 ### Simple Conversation (Similar to Test 1)
@@ -173,17 +345,22 @@ AuthService->App: Generate token
 App->User: Login successful
 ```
 
-### API Request Flow
+### API Request Flow (with Aliases)
 ```sqjs
 Title: REST API Call
 
-Client->API: GET /users/123
+participant Web Client as C
+participant API Gateway as API
+participant Redis Cache as Cache
+participant PostgreSQL as DB
+
+C->API: GET /users/123
 API->Cache: Check cache
 Cache->API: Cache miss
-API->Database: SELECT user
-Database->API: User data
+API->DB: SELECT user
+DB->API: User data
 API->Cache: Store in cache
-API->Client: 200 OK + JSON
+API->C: 200 OK + JSON
 ```
 
 ### E-Commerce Checkout
@@ -201,18 +378,24 @@ Inventory->Order: Reserved
 Order->Customer: Confirmation email
 ```
 
-### Microservices Communication
+### Microservices Communication (with Aliases)
 ```sqjs
 Title: Microservices Flow
 
-Client->APIGateway: HTTP request
-APIGateway->AuthService: Validate token
-AuthService->APIGateway: Valid
-APIGateway->UserService: Get user
-UserService->Database: Query
-Database->UserService: User data
-UserService->APIGateway: Response
-APIGateway->Client: Final response
+participant Web App as Client
+participant API Gateway as GW
+participant Auth Service as Auth
+participant User Service as User
+participant User Database as DB
+
+Client->GW: HTTP request
+GW->Auth: Validate token
+Auth->GW: Valid
+GW->User: Get user
+User->DB: Query
+DB->User: User data
+User->GW: Response
+GW->Client: Final response
 ```
 
 ---

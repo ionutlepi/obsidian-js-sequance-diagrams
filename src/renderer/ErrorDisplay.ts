@@ -37,8 +37,9 @@ export class ErrorDisplay implements IErrorDisplay {
     title.style.cssText = `
       display: flex;
       align-items: center;
+      gap: 8px;
       font-weight: 600;
-      color: var(--text-error);
+      color: var(--text-normal);
       margin-bottom: 4px;
     `;
 
@@ -46,10 +47,24 @@ export class ErrorDisplay implements IErrorDisplay {
       text: '⚠ ',
       cls: 'error-icon'
     });
-    const titleText = error.lineNumber
-      ? `Syntax Error (Line ${error.lineNumber})`
-      : 'Syntax Error';
-    title.createEl('span', { text: titleText });
+
+    title.createEl('span', { text: 'Syntax Error' });
+
+    // Add line number badge if available
+    if (error.lineNumber) {
+      const badge = title.createEl('span', {
+        text: `Line ${error.lineNumber}`,
+        cls: 'error-line-badge'
+      });
+      badge.style.cssText = `
+        background-color: var(--text-error);
+        color: var(--text-normal);
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-size: 0.85em;
+        font-weight: 500;
+      `;
+    }
 
     // Error message
     const message = container.createEl('div', {

@@ -23,10 +23,9 @@ const ARROW_PATTERN = /^([^-]+)(-{1,2}>+)([^:]*):?\s*(.*)$/;
 
 /**
  * Special keywords that are valid diagram syntax
+ * Note: Title and participant are checked case-insensitively in isSpecialKeyword()
  */
 const SPECIAL_KEYWORDS = [
-  'Title:',
-  'Participant',
   'Note left of',
   'Note right of',
   'Note over',
@@ -113,6 +112,17 @@ export class DiagramParser {
    * @returns True if line starts with a special keyword
    */
   private isSpecialKeyword(line: string): boolean {
+    // Case-insensitive check for Title: (v0.10.0)
+    if (/^(title|Title|TITLE):/i.test(line)) {
+      return true;
+    }
+
+    // Case-insensitive check for participant (v0.10.0)
+    if (/^(participant|Participant|PARTICIPANT)\s/i.test(line)) {
+      return true;
+    }
+
+    // Check other keywords (case-sensitive for backward compatibility)
     return SPECIAL_KEYWORDS.some((keyword) =>
       line.startsWith(keyword)
     );
@@ -131,8 +141,9 @@ export class DiagramParser {
   ): ValidationWarning[] {
     const warnings: ValidationWarning[] = [];
 
-    // Check for missing content after "Title:"
-    if (line.startsWith('Title:') && line.trim() === 'Title:') {
+    // Check for missing content after "Title:" (case-insensitive in v0.10.0)
+    const titleMatch = line.match(/^(title|Title|TITLE):\s*$/i);
+    if (titleMatch) {
       warnings.push({
         message: 'Title has no text',
         lineNumber,
