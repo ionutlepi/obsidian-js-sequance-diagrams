@@ -1,0 +1,207 @@
+name: Release
+
+# Automated GitHub Release Workflow
+#
+# Purpose: Creates GitHub releases automatically when version tags are pushed
+#
+# Trigger: Push tags matching v*.*.* (e.g., v1.0.0, v1.2.3-beta.1)
+#
+# Features:
+#   - Automatic version validation (tag, manifest.json, package.json must match)
+#   - Duplicate release prevention
+#   - Automated release notes generation from git commits
+#   - Pre-release detection and marking (alpha, beta, rc)
+#   - Build artifact validation
+#
+# For maintainer guide, see: specs/001-github-release/quickstart.md
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Required for creating releases and uploading assets
+
+    steps:
+      # T009: Checkout with full git history for release notes
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # T009: Setup Node.js with npm cache
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # T010: Extract version from tag
+      - name: Extract version from tag
+        id: get_version
+        run: |
+          echo "::group::Extracting version from tag"
+          TAG=${GITHUB_REF#refs/tags/}
+          VERSION=${TAG#v}
+          echo "Full tag: $TAG"
+          echo "Version: $VERSION"
+          echo "TAG=$TAG" >> $GITHUB_ENV
+          echo "TAG_VERSION=$VERSION" >> $GITHUB_ENV
+
+          # Detect pre-release
+          if [[ "$TAG" =~ ^v?[0-9]+\.[0-9]+\.[0-9]+-(.+)$ ]]; then
+            echo "IS_PRERELEASE=true" >> $GITHUB_ENV
+            echo "Pre-release detected: ${BASH_REMATCH[1]}"
+          else
+            echo "IS_PRERELEASE=false" >> $GITHUB_ENV
+            echo "Stable release"
+          fi
+          echo "::endgroup::"
+
+      # T031: Validate version consistency
+      - name: Validate version consistency
+        run: |
+          echo "::group::Validating version consistency"
+
+          # Make script executable
+          chmod +x scripts/release/validate-version.sh
+
+          # Validate versions match across manifest.json, package.json, and tag
+          if scripts/release/validate-version.sh "${{ env.TAG_VERSION }}"; then
+            echo "::notice::✓ All versions match: ${{ env.TAG_VERSION }}"
+          else
+            echo "::error::Version validation failed"
+            exit 1
+          fi
+
+          echo "::endgroup::"
+
+      # T011: Check for duplicate release (fail fast)
+      - name: Check for duplicate release
+        run: |
+          echo "::group::Checking for existing release"
+          if gh release view "${{ env.TAG }}" &>/dev/null; then
+            echo "::error::Release ${{ env.TAG }} already exists"
+            echo "ERROR: Release ${{ env.TAG }} already exists"
+            echo "URL: $(gh release view '${{ env.TAG }}' --json url -q '.url')"
+            echo "To re-release, manually delete the existing release first"
+            exit 1
+          fi
+          echo "✓ No existing release for ${{ env.TAG }}"
+          echo "::endgroup::"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # T012: Build plugin artifacts
+      - name: Build plugin
+        run: |
+          echo "::group::Installing dependencies"
+          npm ci
+          echo "::endgroup::"
+
+          echo "::group::Building plugin"
+          npm run build
+          echo "✓ Build completed"
+          echo "::endgroup::"
+
+      # T013: Validate build artifacts
+      - name: Validate artifacts
+        run: |
+          echo "::group::Validating build artifacts"
+
+          # Check required files exist
+          if [ ! -f "main.js" ]; then
+            echo "::error::main.js not generated"
+            exit 1
+          fi
+          echo "✓ main.js exists"
+
+          if [ ! -f "manifest.json" ]; then
+            echo "::error::manifest.json missing"
+            exit 1
+          fi
+          echo "✓ manifest.json exists"
+
+          # Validate manifest.json is valid JSON
+          if ! jq empty manifest.json 2>/dev/null; then
+            echo "::error::manifest.json is invalid JSON"
+            exit 1
+          fi
+          echo "✓ manifest.json is valid JSON"
+
+          # Check file sizes (warn if main.js > 1MB, fail if > 100MB)
+          main_size=$(stat -f%z main.js 2>/dev/null || stat -c%s main.js 2>/dev/null)
+          echo "main.js size: $main_size bytes"
+
+          if [ $main_size -gt 104857600 ]; then
+            echo "::error::main.js exceeds 100MB limit"
+            exit 1
+          fi
+
+          if [ $main_size -gt 1048576 ]; then
+            echo "::warning::main.js is larger than 1MB ($main_size bytes)"
+          fi
+
+          # Check if styles.css exists (optional but included if present)
+          if [ -f "styles.css" ]; then
+            echo "✓ styles.css exists"
+          else
+            echo "::notice::styles.css not found (optional)"
+          fi
+
+          echo "✓ All required artifacts validated"
+          echo "::endgroup::"
+
+      # T023: Generate release notes
+      - name: Generate release notes
+        run: |
+          echo "::group::Generating release notes"
+
+          # Make script executable
+          chmod +x scripts/release/generate-release-notes.sh
+
+          # Generate notes from git history for current tag
+          scripts/release/generate-release-notes.sh "${{ env.TAG }}" --output release-notes.md
+
+          echo "::notice::Release notes generated"
+          echo "::endgroup::"
+
+      # T036: Set release title based on pre-release status
+      - name: Set release title
+        run: |
+          if [ "${{ env.IS_PRERELEASE }}" = "true" ]; then
+            echo "RELEASE_TITLE=Release ${{ env.TAG }} (Pre-release)" >> $GITHUB_ENV
+          else
+            echo "RELEASE_TITLE=Release ${{ env.TAG }}" >> $GITHUB_ENV
+          fi
+
+      # T014/T024/T035: Create GitHub release with assets and release notes
+      - name: Create GitHub release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ env.TAG }}
+          name: ${{ env.RELEASE_TITLE }}
+          bodyFile: release-notes.md
+          prerelease: ${{ env.IS_PRERELEASE }}
+          artifacts: "main.js,manifest.json,styles.css"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          allowUpdates: false
+          draft: false
+          makeLatest: true
+
+      # T015: Log completion (T016: GitHub Actions handles notifications automatically)
+      - name: Release complete
+        if: success()
+        run: |
+          echo "::notice::✅ Release ${{ env.TAG }} created successfully"
+          echo "::notice::View release: ${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ env.TAG }}"
+
+      - name: Release failed
+        if: failure()
+        run: |
+          echo "::error::❌ Release ${{ env.TAG }} failed"
+          echo "Check the logs above for details"

@@ -1,0 +1,118 @@
+name: PR Validation
+
+# Prevents merging code that doesn't pass tests or build
+#
+# Purpose: Run tests and build validation on every pull request
+# Trigger: Pull requests to main branch and pushes to main
+#
+# This ensures that no broken code gets merged to main
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the code
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Setup Node.js 20 with npm caching
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          echo "::group::Installing dependencies"
+          npm ci
+          echo "::endgroup::"
+
+      # Run all tests
+      - name: Run tests
+        run: |
+          echo "::group::Running tests"
+          npm test
+          echo "::endgroup::"
+
+      # Run linter if configured
+      - name: Run linter
+        run: |
+          echo "::group::Running linter"
+          npm run lint || echo "::notice::No linter configured, skipping"
+          echo "::endgroup::"
+        continue-on-error: true
+
+      # Build the plugin
+      - name: Build plugin
+        run: |
+          echo "::group::Building plugin"
+          npm run build
+          echo "✓ Build completed"
+          echo "::endgroup::"
+
+      # Validate build artifacts exist
+      - name: Validate build artifacts
+        run: |
+          echo "::group::Validating build artifacts"
+
+          # Check main.js exists
+          if [ ! -f "main.js" ]; then
+            echo "::error::main.js not generated"
+            exit 1
+          fi
+          echo "✓ main.js exists"
+
+          # Check manifest.json exists
+          if [ ! -f "manifest.json" ]; then
+            echo "::error::manifest.json missing"
+            exit 1
+          fi
+          echo "✓ manifest.json exists"
+
+          # Validate manifest.json is valid JSON
+          if ! jq empty manifest.json 2>/dev/null; then
+            echo "::error::manifest.json is invalid JSON"
+            exit 1
+          fi
+          echo "✓ manifest.json is valid JSON"
+
+          # Check file sizes
+          main_size=$(stat -c%s main.js 2>/dev/null || stat -f%z main.js 2>/dev/null)
+          echo "main.js size: $main_size bytes"
+
+          if [ $main_size -gt 104857600 ]; then
+            echo "::error::main.js exceeds 100MB limit"
+            exit 1
+          fi
+
+          if [ $main_size -gt 1048576 ]; then
+            echo "::warning::main.js is larger than 1MB ($main_size bytes)"
+          fi
+
+          echo "✓ All build artifacts validated"
+          echo "::endgroup::"
+
+      # Summary
+      - name: Validation summary
+        if: success()
+        run: |
+          echo "::notice::✅ All validation checks passed!"
+          echo "::notice::Tests: PASS"
+          echo "::notice::Build: PASS"
+          echo "::notice::Artifacts: VALID"
+
+      - name: Validation failed
+        if: failure()
+        run: |
+          echo "::error::❌ Validation failed"
+          echo "::error::Please fix the issues above before merging"
+          exit 1

@@ -1,27 +1,26 @@
 <!--
 SYNC IMPACT REPORT
 ==================
-Version Change: 1.0.0 → 1.1.0
+Version Change: 1.1.0 → 1.1.1
 Modified Principles: None
-Added Sections:
-  - IV. Knowledge Retention & Lessons Learned
-
+Added Sections: None
 Removed Sections: None
+Enhanced Sections:
+  - Development Guidance - Added test resources reference
 
 Templates Status:
   ✅ spec-template.md - No changes required
   ✅ plan-template.md - No changes required
   ✅ tasks-template.md - No changes required
-  ✅ LESSONS-LEARNED.md template - Aligns with new principle
-  ⚠ agent-file-template.md - Not reviewed (out of scope for constitution principles)
-  ⚠ checklist-template.md - Not reviewed (out of scope for constitution principles)
+  ✅ All templates align with constitution
 
 Follow-up TODOs: None
 
-Rationale for v1.1.0 MINOR bump:
-  - New principle added (Knowledge Retention & Lessons Learned)
-  - Backward compatible - does not change existing workflow
-  - Enhances organizational learning without breaking existing practices
+Rationale for v1.1.1 PATCH bump:
+  - Clarification of existing development workflow
+  - Added reference to test-resources/ directory for test examples
+  - Non-breaking enhancement to developer guidance
+  - No principle changes or new requirements
 ==================
 -->
 
@@ -193,4 +192,6 @@ Constitution uses semantic versioning: `MAJOR.MINOR.PATCH`
 
 For runtime development workflow and command usage, agents should consult the command files in `.specify/templates/commands/*.md` and related documentation.
 
-**Version**: 1.1.0 | **Ratified**: 2025-10-30 | **Last Amended**: 2025-11-07
+**Test Resources**: Manual test examples, sample diagrams, and quick test guides are available in `test-resources/`. These resources complement automated unit tests and provide real-world usage scenarios for validation. See `test-resources/QUICKTEST.md` for 5-minute validation procedures and `test-resources/SAMPLE-DIAGRAMS.md` for comprehensive test data.
+
+**Version**: 1.1.1 | **Ratified**: 2025-10-30 | **Last Amended**: 2025-12-02

@@ -14,16 +14,8 @@ A powerful Obsidian plugin that renders beautiful sequence diagrams from `sqjs` 
 - ⚡ **Performance Warnings** - Alerts for large diagrams (>15 participants or >50 messages)
 - 📋 **Copy to Clipboard** - Export diagrams as images (PNG/SVG)
 - 🔒 **Offline First** - Works without internet connection (library bundled)
-- 🚀 **Fast** - Renders diagrams in <2 seconds
 
 ## Installation
-
-### From Obsidian Community Plugins (Recommended)
-
-1. Open Obsidian Settings
-2. Navigate to **Community Plugins** and disable Safe Mode
-3. Click **Browse** and search for "SQJS Sequence Diagram"
-4. Click **Install** and then **Enable**
 
 ### Manual Installation
 
@@ -159,8 +151,8 @@ API->UI: JSON Response
 
 ````markdown
 ```sqjs
-participant C as "🌐 Client"
-participant S as "🖥️ Server"
+participant 🌐 Client as C
+participant 🖥️ Server as S
 C->S: Quick and readable!
 ```
 ````
@@ -196,9 +188,9 @@ The diagram will display participants in the order they're declared (Database, S
 
 ````markdown
 ```sqjs
-participant Z as "Zulu Service"
-participant M as "Mike Service"
-participant A as "Alpha Service"
+participant Zulu Service as Z 
+participant Mike Service as M
+participant Alpha Service as A
 
 A->M: Forward
 M->Z: Process
@@ -216,11 +208,7 @@ All three features work together seamlessly:
 ```sqjs
 Title: 🔐 Complete Authentication Flow (v2.0)
 
-participant Client as "Web Browser"
-participant LB as "Load Balancer"
-participant Auth as "Auth Service"
-participant Cache as "Redis Cache"
-participant DB as "User Database"
+
 
 Client->LB: POST /login
 LB->Auth: Forward credentials
@@ -294,25 +282,19 @@ Rendering may take longer than usual.
 
 ## Performance
 
-- **Render Time**: <2 seconds for diagrams with ≤10 participants and ≤20 messages
-- **Theme Switch**: <3 seconds to apply across 100+ notes
-- **Memory**: No leaks after 10+ edit/reading mode switches
-- **Bundle Size**: 213KB (43% of 500KB budget)
+- **Bundle Size**: 213KB 
 
 ## Troubleshooting
 
 ### Diagrams Not Rendering
 
-1. **Check you're in Reading Mode** - Code blocks only render in reading mode
-2. **Verify syntax** - Look for red error messages indicating syntax issues
-3. **Check console** - Open DevTools (Cmd/Ctrl+Shift+I) and look for errors
-4. **Restart Obsidian** - Sometimes a restart helps after installing
+1. **Verify syntax** - Look for red error messages indicating syntax issues
+2. **Check console** - Open DevTools (Cmd/Ctrl+Shift+I) and look for errors
 
 ### Copy Button Not Showing
 
 1. **Hover over diagram** - The copy button appears on hover
 2. **Check for errors** - Diagrams with errors don't show copy buttons
-3. **Verify plugin is enabled** - Settings → Community Plugins
 
 ### Slow Performance
 
@@ -369,8 +351,34 @@ src/
 
 tests/
 ├── unit/                      # Unit tests
-├── integration/              # Integration tests
-└── fixtures/                 # Test data
+├── integration/               # Integration tests
+├── workflows/                 # CI/CD workflow tests
+│   ├── duplicate-detection.test.ts
+│   ├── prerelease-detection.test.ts
+│   ├── prerelease-integration.test.ts
+│   ├── release-notes-integration.test.ts
+│   ├── release-notes.test.ts
+│   ├── release-workflow.test.ts
+│   ├── retry-with-backoff.test.ts
+│   ├── validate-version.test.ts
+│   └── version-validation-integration.test.ts
+└── fixtures/                  # Test data
+
+.github/workflows/
+└── release.yml                # Automated GitHub releases
+
+.gitea/workflows/
+├── pr-check.yml               # PR validation (prevents broken merges)
+├── release.yml                # Automated Gitea releases
+├── SETUP.md                   # Gitea Actions setup guide
+├── QUICK-START.md             # Quick reference
+├── UNRAID-SETUP.md            # Unraid-specific instructions
+└── RUNNER-FIX.md              # Troubleshooting guide
+
+scripts/release/
+├── retry-with-backoff.sh      # Retry utility with exponential backoff
+├── generate-release-notes.sh  # Automated release notes from git history
+└── validate-version.sh        # Version consistency validation
 ```
 
 ## Testing
